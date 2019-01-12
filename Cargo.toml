@@ -5,3 +5,5 @@ authors = ["Alex Chi <iskyzh@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+mnist = "0.4.0"
+rulinalg = "0.4.2"
