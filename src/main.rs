@@ -12,8 +12,8 @@ fn main() {
             dataset.trn_size,
             &dataset.get_trn_mat(),
             &dataset.data.trn_lbl,
-            20,
-            3.0,
+            10,
+            1.0,
         );
         let (correct, total) = Evaluator::evaluate(&dataset, &network);
         println!("Epoch {}: {}/{}", epoch, correct, total);
