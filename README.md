@@ -1,5 +1,7 @@
 # mnist.rs
 
+[![Build Status](https://travis-ci.com/skyzh/mnist.rs.svg?branch=master)](https://travis-ci.com/skyzh/mnist.rs)
+
 Train neural network for MNIST database implemented in Rust
 
 ## Usage

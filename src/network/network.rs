@@ -17,6 +17,14 @@ impl Network {
         ])
     }
 
+    pub fn new_test() -> Self {
+        Self::new(vec![
+            Box::new(InputLayer::new(5)),
+            Box::new(SigmoidLayer::new(3)),
+            Box::new(SigmoidLayer::new(1)),
+        ])
+    }
+
     pub fn new(layers: Vec<Box<Layer + Sync>>) -> Self {
         let mut rng = rand::thread_rng();
         let mut w : Vec<Matrix<f64>> = vec![];
