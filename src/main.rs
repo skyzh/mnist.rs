@@ -27,16 +27,22 @@ fn main() {
     for epoch in 0..100 {
         let mut train_dataset: Vec<u32> = (1..dataset.trn_size).collect();
         train_dataset.shuffle(&mut rng);
-        for i in 0..dataset.trn_size {
-            let input = &dataset.trn_img[i as usize];
-            let (xs, activations) = sgd.feed_forward(input);
-            let nabla = sgd.back_prop(
-                &cost,
-                &xs,
-                &activations,
-                &targets[dataset.trn_lbl[i as usize] as usize],
-            );
-            sgd.apply(&nabla);
+        for i in 0..(dataset.trn_size / mini_batch) as usize {
+            let mut nablas = vec![];
+            for _ in 0..mini_batch as usize {
+                let input = &dataset.trn_img[i];
+                let (xs, activations) = sgd.feed_forward(input);
+                let nabla = sgd.back_prop(
+                    &cost,
+                    &xs,
+                    &activations,
+                    &targets[dataset.trn_lbl[i] as usize],
+                );
+                nablas.push(nabla);
+            }
+            for j in 0..mini_batch as usize {
+                sgd.apply(&nablas[j], 1.0 / mini_batch as f64);
+            }
         }
         let mut correct = 0;
         for i in 0..dataset.tst_size {

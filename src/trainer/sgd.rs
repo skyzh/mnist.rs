@@ -41,12 +41,12 @@ impl SGD {
         Self { network, w, b }
     }
 
-    pub fn apply(&mut self, nabla: &(Vec<Matrix<f64>>, Vec<Vector<f64>>)) {
+    pub fn apply(&mut self, nabla: &(Vec<Matrix<f64>>, Vec<Vector<f64>>), multi: f64) {
         debug_assert!(nabla.0.len() == self.w.len());
         debug_assert!(nabla.1.len() == self.b.len());
         for i in 0..self.network.layers.len() - 1 {
-            self.w[i] -= &nabla.0[i];
-            self.b[i] -= &nabla.1[i];
+            self.w[i] -= &nabla.0[i] * multi;
+            self.b[i] -= &nabla.1[i] * multi;
         }
     }
 }
@@ -125,7 +125,7 @@ mod tests {
         for _ in 0..100 {
             let (xs, activations) = sgd.feed_forward(&input);
             let nabla = sgd.back_prop(&cost, &xs, &activations, &output);
-            sgd.apply(&nabla);
+            sgd.apply(&nabla, 1.0);
             last_activation = activations.last().unwrap()[0];
         }
         assert!(last_activation > 0.9);
