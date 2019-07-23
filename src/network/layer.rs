@@ -1,5 +1,4 @@
-use rulinalg::{matrix::Matrix, vector::Vector};
-use super::Cost;
+use rulinalg::vector::Vector;
 
 pub trait Layer {
     fn output_shape(&self) -> usize;

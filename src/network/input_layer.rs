@@ -1,4 +1,4 @@
-use rulinalg::{matrix::Matrix, vector::Vector};
+use rulinalg::vector::Vector;
 
 use super::Layer;
 
@@ -21,7 +21,7 @@ impl Layer for InputLayer {
         debug_assert!(input.size() == self.input_shape());
         input.clone()
     }
-    fn back_prop(&self, nabla: &Vector<f64>, x: &Vector<f64>) -> Vector<f64> {
+    fn back_prop(&self, nabla: &Vector<f64>, _x: &Vector<f64>) -> Vector<f64> {
         debug_assert!(nabla.size() == self.output_shape());
         panic!("cannot back prop on input layer!")
     }

@@ -1,4 +1,4 @@
-use rulinalg::{matrix::Matrix, vector::Vector};
+use rulinalg::vector::Vector;
 use super::Cost;
 
 pub struct MSE {}

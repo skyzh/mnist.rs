@@ -1,4 +1,4 @@
-use rulinalg::{matrix::Matrix, vector::Vector};
+use rulinalg::vector::Vector;
 
 pub trait Cost {
     fn cost(&self, output: &Vector<f64>, sample: &Vector<f64>) -> f64;
