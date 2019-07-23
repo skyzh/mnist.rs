@@ -29,10 +29,9 @@ impl Network {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use rulinalg::matrix::BaseMatrix;
     
     #[test]
     fn test_create_mnist_network() {
-        let network = Network::new_mnist();
+        let _ = Network::new_mnist();
     }
 }

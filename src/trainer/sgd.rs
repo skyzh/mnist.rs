@@ -122,9 +122,9 @@ mod tests {
         let input = vector![1.0, 2.0, 3.0, 4.0, 5.0];
         let output = vector![1.0];
         let mut last_activation = 0.0;
-        for i in 0..100 {
-            let (xs, activations) = sgd.feed_forward(&vector![1.0, 2.0, 3.0, 4.0, 5.0]);
-            let nabla = sgd.back_prop(&cost, &xs, &activations, &vector![1.0]);
+        for _ in 0..100 {
+            let (xs, activations) = sgd.feed_forward(&input);
+            let nabla = sgd.back_prop(&cost, &xs, &activations, &output);
             sgd.apply(&nabla);
             last_activation = activations.last().unwrap()[0];
         }
