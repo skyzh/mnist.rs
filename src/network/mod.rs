@@ -9,3 +9,9 @@ pub use mse::MSE;
 
 mod sigmoid_layer;
 pub use sigmoid_layer::SigmoidLayer;
+
+mod input_layer;
+pub use input_layer::InputLayer;
+
+mod network;
+pub use network::Network;

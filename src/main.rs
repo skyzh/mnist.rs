@@ -1,3 +1,6 @@
+mod lib;
+use lib::network::Network;
+
 fn main() {
-    println!("Hello, World!");
+    let network = Network::new_mnist()
 }
