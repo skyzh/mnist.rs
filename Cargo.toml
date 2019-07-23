@@ -1,10 +1,10 @@
 [package]
 name = "mnist-deep-learning"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Alex Chi <iskyzh@gmail.com>"]
 edition = "2018"
 
 [dependencies]
 mnist = "0.4.0"
 rulinalg = "0.4.2"
-rand = "0.6.4"
+rand = "0.7.0"
