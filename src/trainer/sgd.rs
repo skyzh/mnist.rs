@@ -40,6 +40,15 @@ impl SGD {
         }
         Self { network, w, b }
     }
+
+    pub fn apply(&mut self, nabla: &(Vec<Matrix<f64>>, Vec<Vector<f64>>)) {
+        debug_assert!(nabla.0.len() == self.w.len());
+        debug_assert!(nabla.1.len() == self.b.len());
+        for i in 0..self.network.layers.len() - 1 {
+            self.w[i] -= &nabla.0[i];
+            self.b[i] -= &nabla.1[i];
+        }
+    }
 }
 
 impl Trainer for SGD {
@@ -47,9 +56,9 @@ impl Trainer for SGD {
         &self,
         first_layer_output: &Vector<f64>,
     ) -> (Vec<Vector<f64>>, Vec<Vector<f64>>) {
-        let mut activations: Vec<Vector<f64>> = vec![];
+        let mut activations: Vec<Vector<f64>> = vec![first_layer_output.clone()];
         let mut xs: Vec<Vector<f64>> = vec![];
-        let mut output = &first_layer_output.clone();
+        let mut output = first_layer_output;
         for i in 0..self.network.layers.len() - 1 {
             let input = &self.w[i] * output + &self.b[i];
             let activation = self.network.layers[i + 1].feed_forward(&input);
@@ -57,14 +66,14 @@ impl Trainer for SGD {
             xs.push(input);
             output = activations.last().unwrap();
         }
-        (activations, xs)
+        (xs, activations)
     }
 
     fn back_prop(
         &self,
         cost: &impl Cost,
-        xs: Vec<Vector<f64>>,
-        activations: Vec<Vector<f64>>,
+        xs: &Vec<Vector<f64>>,
+        activations: &Vec<Vector<f64>>,
         target: &Vector<f64>,
     ) -> (Vec<Matrix<f64>>, Vec<Vector<f64>>) {
         let mut nabla = cost.d_cost(activations.last().unwrap(), target);
@@ -89,16 +98,18 @@ impl Trainer for SGD {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::network::MSE;
 
     #[test]
     fn test_feed_forward() {
         let network = Network::new_test();
         let sgd = SGD::new(network);
-        let (activations, xs) = sgd.feed_forward(&vector![1.0, 2.0, 3.0, 4.0, 5.0]);
-        assert_eq!(activations.len(), 2);
+        let (xs, activations) = sgd.feed_forward(&vector![1.0, 2.0, 3.0, 4.0, 5.0]);
+        assert_eq!(activations.len(), 3);
         assert_eq!(xs.len(), 2);
-        assert_eq!(activations[0].size(), 3);
-        assert_eq!(activations[1].size(), 1);
+        assert_eq!(activations[0].size(), 5);
+        assert_eq!(activations[1].size(), 3);
+        assert_eq!(activations[2].size(), 1);
         assert_eq!(xs[0].size(), 3);
         assert_eq!(xs[1].size(), 1);
     }
@@ -106,14 +117,18 @@ mod tests {
     #[test]
     fn test_back_prop() {
         let network = Network::new_test();
-        let sgd = SGD::new(network);
-        let (activations, xs) = sgd.feed_forward(&vector![1.0, 2.0, 3.0, 4.0, 5.0]);
-        assert_eq!(activations.len(), 2);
-        assert_eq!(xs.len(), 2);
-        assert_eq!(activations[0].size(), 3);
-        assert_eq!(activations[1].size(), 1);
-        assert_eq!(xs[0].size(), 3);
-        assert_eq!(xs[1].size(), 1);
+        let mut sgd = SGD::new(network);
+        let cost = MSE {};
+        let input = vector![1.0, 2.0, 3.0, 4.0, 5.0];
+        let output = vector![1.0];
+        let mut last_activation = 0.0;
+        for i in 0..100 {
+            let (xs, activations) = sgd.feed_forward(&vector![1.0, 2.0, 3.0, 4.0, 5.0]);
+            let nabla = sgd.back_prop(&cost, &xs, &activations, &vector![1.0]);
+            sgd.apply(&nabla);
+            last_activation = activations.last().unwrap()[0];
+        }
+        assert!(last_activation > 0.9);
     }
 
     #[test]

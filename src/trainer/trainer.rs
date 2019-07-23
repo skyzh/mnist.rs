@@ -7,8 +7,8 @@ pub trait Trainer {
     fn back_prop(
         &self,
         cost: &impl Cost,
-        xs: Vec<Vector<f64>>,
-        activations: Vec<Vector<f64>>,
+        xs: &Vec<Vector<f64>>,
+        activations: &Vec<Vector<f64>>,
         target: &Vector<f64>,
     ) -> (Vec<Matrix<f64>>, Vec<Vector<f64>>);
 }
